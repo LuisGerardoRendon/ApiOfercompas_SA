@@ -19,8 +19,8 @@ class Oferta(Publicacion):
         for key in atributos:
             if key in self.__dict__.keys():
                 diccionario[key] = self.__getattribute__(key)
-        diccionario["imagen"] = "http://127.0.0.1:5000/publicaciones/" + str(self.idPublicacion) + "/imagenes"
-        diccionario["video"] = "http://127.0.0.1:5000/publicaciones/" + str(self.idPublicacion) + "/videos"
+        diccionario["imagen"] = "http://127.0.0.1:42777/publicaciones/" + str(self.idPublicacion) + "/imagenes"
+        diccionario["video"] = "http://127.0.0.1:42777/publicaciones/" + str(self.idPublicacion) + "/videos"
         return diccionario
 
     def registrar_oferta(self) -> int:

@@ -89,7 +89,6 @@ def actualizar_oferta(idPublicacion):
             oferta.categoria = oferta_recibida["categoria"]
             oferta.precio = oferta_recibida["precio"]
             oferta.vinculo = oferta_recibida["vinculo"]
-
             oferta.obtener_autor_por_id()
             status = oferta.actualizar_oferta(idPublicacion)
             if status == HTTPStatus.OK:
