@@ -2,7 +2,7 @@ name: "Build and Push"
 on:
   pull_request:
     branches:
-      - CAMBIARAMASTER
+      - master
 jobs:
   build:
     runs-on: ubuntu-latest
