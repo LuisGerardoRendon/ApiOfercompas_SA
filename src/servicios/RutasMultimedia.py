@@ -75,6 +75,7 @@ def actualizar_archivo(idPublicacion):
     respuesta = Response(status=HTTPStatus.BAD_REQUEST)
     multimedia = Multimedia()
     servidor = ServidorArchivos()
+
     resultado = 0
     ruta = str(idPublicacion + "-" + archivo.filename)
     resultado = servidor.guardar_archivo(archivo, ruta)
