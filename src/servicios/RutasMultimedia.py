@@ -40,9 +40,7 @@ def recuperar_imagen(idPublicacion):
     multimedia = Multimedia()
     response = Response(status=HTTPStatus.NOT_FOUND)
     ruta_foto = multimedia.obtener_ruta_foto_id(idPublicacion)
-    print("CACA:" + ruta_foto)
     if ruta_foto != "not":
-        print("ENTRÓ!!!!!!!!")
         resultado = multimedia.recuperar_archivo(ruta_foto)
         if resultado:
             response = send_file(
