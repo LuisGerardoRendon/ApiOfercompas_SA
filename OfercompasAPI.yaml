@@ -1,0 +1,507 @@
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: OfercompasAPI
+  description: API para el servicio de Ofercompas
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/EfrainCami/Ofercompas/1.0
+
+paths:
+  /ofertas:
+    get:
+      summary: Devuelve una lista de ofertas
+      parameters:
+        - name: numeroPagina
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: categoria
+          in: query
+          required: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 20
+        - name: calificacionMinima
+          in: query
+          required: false
+          schema:
+            type: integer
+
+      responses:
+        '200':
+            description: Un arreglo JSon de Ofertas
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    pedidos:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/OfertaSchema'
+
+    post:
+      summary: Publica una oferta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfertaSchema'
+      responses:
+        '201':
+            description: Una representación JSON de la oferta creada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/OfertaSchema'
+
+  /ofertas/{id_oferta}:
+    parameters:
+      - in: path
+        name: id_oferta
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Devuelve los detalles de una oferta específica
+      responses:
+        '200':
+          description: Una representación JSON de una oferta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfertaSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Actualiza una oferta existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfertaSchema'
+      responses:
+        '200':
+          description: Una representación JSON de una oferta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfertaSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Elimina una oferta existente
+      responses:
+        '204':
+          description: El recurso se eliminó con éxito
+
+  /comunidad:
+    post:
+      summary: Registra un miembroOfercompas en la comunidad
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '201':
+          description: Una representación JSON del miembroOfercompasRegistrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+
+  /comunidad/{idMiembro}:
+    put:
+      summary: Actualiza un Miembro Ofercompas existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '200':
+          description: Una representación JSON del Miembro Ofercompas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Cambia el atributo estaActivo de un miembroOfercompas a false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '200':
+          description: Una representación JSON del Miembro Ofercompas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+components:
+  responses:
+    Success:
+      description: Solicitud realizada con exito
+
+    NotFound:
+      description: No se encontró el recurso especificado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: El servidor no pudo interpretar la solicitud, sintaxis invalida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+
+    OfertaSchema:
+      type: object
+      required:
+        - titulo
+        - descripcion
+        - precio
+        - vinculo
+        - puntuacion
+        - foto
+        - video
+        - estaActivo
+        - categoria
+      properties:
+        titulo:
+          type: string
+          description: Titulo de la oferta
+        descripcion:
+          type: string
+        precio:
+          type: integer
+          format: float
+        vinculo:
+          type: string
+        puntuacion:
+          type: integer
+        foto:
+          type: string
+          format: binary
+        video:
+          type: string
+          format: binary
+        estaActivo:
+          type: boolean
+        categoria:
+          type: string
+          enum:
+            - tecnologia
+            - modaMujer
+            - modaHombre
+            - hogar
+            - mascotas
+            - viaje
+            - entretenimiento
+            - comidaBebida
+    MiembroOfercompasSchema:
+      type: object
+      required:
+        - nickname
+        - email
+        - contrasenia
+        - estaActivo
+        - esModerador
+      properties:
+        nickname:
+          type: string
+        email:
+          type: string
+        contraenia:
+          type: string
+        estaActivo:
+          type: boolean
+        esModerador:
+          type: boolean
+
+          ==========================================================================
+
+openapi: 3.0.0
+info:
+  version: '1.0'
+  title: OfercompasAPI
+  description: API para el servicio de Ofercompas
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/EfrainCami/Ofercompas/1.0
+
+paths:
+  /ofertas:
+    get:
+      summary: Devuelve una lista de ofertas
+      parameters:
+        - name: numeroPagina
+          in: query
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+        - name: categoria
+          in: query
+          required: false
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 20
+        - name: calificacionMinima
+          in: query
+          required: false
+          schema:
+            type: integer
+
+      responses:
+        '200':
+            description: Un arreglo JSon de Ofertas
+            content:
+              application/json:
+                schema:
+                  type: object
+                  properties:
+                    pedidos:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/OfertaSchema'
+
+    post:
+      summary: Publica una oferta
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfertaSchema'
+      responses:
+        '201':
+            description: Una representación JSON de la oferta creada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/OfertaSchema'
+
+  /ofertas/{id_oferta}:
+    parameters:
+      - in: path
+        name: id_oferta
+        required: true
+        schema:
+          type: string
+    get:
+      summary: Devuelve los detalles de una oferta específica
+      responses:
+        '200':
+          description: Una representación JSON de una oferta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfertaSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Actualiza una oferta existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfertaSchema'
+      responses:
+        '200':
+          description: Una representación JSON de una oferta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfertaSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    patch:
+      summary: Elimina una oferta existente
+      responses:
+        '204':
+          description: El recurso se eliminó con éxito
+
+  /comunidad:
+    post:
+      summary: Registra un miembroOfercompas en la comunidad
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '201':
+          description: Una representación JSON del miembroOfercompasRegistrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+
+  /comunidad/{idMiembro}:
+    put:
+      summary: Actualiza un Miembro Ofercompas existente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '200':
+          description: Una representación JSON del Miembro Ofercompas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    patch:
+      summary: Cambia el atributo estaActivo de un miembroOfercompas a false
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '200':
+          description: Una representación JSON del Miembro Ofercompas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+components:
+  responses:
+    Success:
+      description: Solicitud realizada con exito
+
+    NotFound:
+      description: No se encontró el recurso especificado
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    BadRequest:
+      description: El servidor no pudo interpretar la solicitud, sintaxis invalida
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+
+    OfertaSchema:
+      type: object
+      required:
+        - titulo
+        - descripcion
+        - precio
+        - vinculo
+        - puntuacion
+        - foto
+        - video
+        - estaActivo
+        - categoria
+      properties:
+        titulo:
+          type: string
+          description: Titulo de la oferta
+        descripcion:
+          type: string
+        precio:
+          type: integer
+          format: float
+        vinculo:
+          type: string
+        puntuacion:
+          type: integer
+        foto:
+          type: string
+          format: binary
+        video:
+          type: string
+          format: binary
+        estaActivo:
+          type: boolean
+        categoria:
+          type: string
+          enum:
+            - tecnologia
+            - modaMujer
+            - modaHombre
+            - hogar
+            - mascotas
+            - viaje
+            - entretenimiento
+            - comidaBebida
+    MiembroOfercompasSchema:
+      type: object
+      required:
+        - nickname
+        - email
+        - contrasenia
+        - estaActivo
+        - esModerador
+      properties:
+        nickname:
+          type: string
+        email:
+          type: string
+        contraenia:
+          type: string
+        estaActivo:
+          type: boolean
+        esModerador:
+          type: boolean

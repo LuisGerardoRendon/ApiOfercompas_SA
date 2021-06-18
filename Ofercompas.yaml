@@ -1,0 +1,822 @@
+openapi: 3.0.3
+info:
+  version: '1.0'
+  title: OfercompasAPI
+  description: API para el servicio de Ofercompas
+
+  contact:
+    name: Ofercompas Support
+    email: efrain_escuela@gmail.com
+
+servers:
+  # Added by API Auto Mocking Plugin
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/EfrainCami/Ofercompas/1.0
+
+paths:
+  /ofertas:
+    description: Catalogo de ofertas registradas
+    get:
+      summary: Devuelve una lista de ofertas
+      tags:
+        - Ofertas
+      operationId: getOfertas
+      parameters:
+        - name: numeroPagina
+          in: query
+          required: false
+          example: 35
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+        - name: categoria
+          in: query
+          required: false
+          example: TECNOLOGIA
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 20
+        - name: calificacionMinima
+          in: query
+          required: false
+          example: 3
+          schema:
+            type: integer
+            format: int32
+            minimum: -999
+            maximum: 999
+      responses:
+        '200':
+          description: Se han encontrado ofertas
+          content:
+            application/json:
+              schema:
+                description: Un arreglo de ofertas
+                type: array
+                items:
+                  $ref: '#/components/schemas/OfertaSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      summary: Publica una oferta
+      tags:
+        - Ofertas
+      operationId: postOfertas
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfertaSchema'
+        required: true
+      responses:
+        '201':
+            description: Una representación JSON de la oferta creada
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/OfertaSchema'
+
+    put:
+      summary: Actualiza una oferta existente
+      tags:
+        - Ofertas
+      parameters:
+        - name: id_oferta
+          description: El id de la oferta
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OfertaSchema'
+      responses:
+        '200':
+          description: Una representación JSON de una oferta
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfertaSchema'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+  /publicaciones/{idPublicacion}/puntuaciones:
+    post:
+      summary: Puntúa una Publicación
+      tags:
+        - Publicaciones
+      operationId: postPuntuacion
+      parameters:
+        - name: id_publicacion
+          description: El id de la publicacion
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      requestBody:
+        content:
+          application/json:
+            schema:
+                $ref: '#/components/schemas/PuntuacionSchema'
+      responses:
+        '201':
+          description: Una representación JSON de la oferta creada
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OfertaSchema'
+
+
+
+  /publicaciones/{id_publicacion}:
+    delete:
+      summary: Elimina una publicación existente
+      tags:
+        - Publicaciones
+      parameters:
+        - name: id_publicacion
+          description: El id de la publicacion
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      responses:
+        '200':
+          description: El recurso se eliminó con éxito
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /publicaciones/{id_publicacion}/prohibir:
+    delete:
+      summary: Prohibe una publicación considerada inadecuada
+      tags:
+        - Publicaciones
+      parameters:
+        - name: id_publicacion
+          description: El id de la publicacion
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      responses:
+        '200':
+          description: El recurso se prohibió con éxito
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+
+
+
+
+  /publicaciones/{id_publicacion}/denuncias:
+    post:
+      summary: Publica una denuncia hacia una publicación
+      tags:
+        - Denuncias
+      operationId: postDenuncia
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DenunciaSchema'
+        required: true
+      responses:
+        '201':
+          description: Una representación JSON del codigo publicado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DenunciaSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /publicaciones/{id_publicacion}/comentarios:
+    description: Los comentarios de una publicación según su id
+    get:
+      summary: Obtiene todos los comentarios de una oferta
+      tags:
+        - Comentarios
+      operationId: getComentarios
+      parameters:
+          - name: id_publicacion
+            description: El id de la publicacion
+            in: path
+            schema:
+              type: integer
+              format: int32
+              minimum: 1
+            required: true
+      responses:
+        '200':
+          description: Se han encontrado códigos
+          content:
+            application/json:
+              schema:
+                description: Un arreglo de comentarios
+                type: array
+                items:
+                  $ref: '#/components/schemas/ComentarioSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    post:
+      summary: Publica un comentario en una publicacion
+      tags:
+        - Comentarios
+      operationId: postComentario
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ComentarioSchema'
+            required: true
+      responses:
+        '201':
+          description: Una representación JSON del codigo publicado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ComentarioSchema'
+
+
+  /publicaciones/{idPublicacion}/multimedia:
+    post:
+      summary: Carga un archivo y lo asocia a una Oferta
+      tags:
+        - Multimedia
+      operationId: postComentario
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      parameters:
+        - in: path
+          name: idPublicacion
+          description: El id del codigo
+          schema:
+            type: integer
+            format: int32
+          required: true
+      responses:
+        '201':
+          description: Achivo carado correctamente
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+  /publicaciones/{idPublicacion}/imagenes:
+    get:
+      summary: Retorna la imagen asociada a esa Oferta
+      tags:
+        - Multimedia
+      parameters:
+        - name: idOferta
+          description: Id del miembro
+          example: 4
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      responses:
+        '200':
+          description: Imagen recuperada
+          content:
+            application/png:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+  /publicaciones/{idPublicacion}/videos:
+    get:
+      summary: Retorna el video asociado a una Oferta
+      tags:
+        - Multimedia
+      parameters:
+        - name: idOferta
+          description: Id del miembro
+          example: 4
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      responses:
+        '200':
+          description: Video recuperada
+          content:
+            application/mp4:
+              schema:
+                type: string
+                format: binary
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+    put:
+      summary: Actualiza un archivo
+      tags:
+        - Multimedia
+      operationId: putMultimedia
+      requestBody:
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: array
+                  items:
+                    type: string
+                    format: binary
+      parameters:
+        - in: path
+          name: idPublicacion
+          description: El id del codigo
+          schema:
+            type: integer
+            format: int32
+          required: true
+      responses:
+        '201':
+          description: Achivo carado correctamente
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+
+
+
+
+
+  /codigos:
+    post:
+      summary: Publica un codigo de descuento
+      tags:
+        - Codigos
+      operationId: postCodigo
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CodigoDescuentoSchema'
+        required: true
+      responses:
+        '201':
+          description: Una representación JSON del codigo publicado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoDescuentoSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+
+    get:
+      summary: Devuelve una lista de Códigos de descuento
+      tags:
+        - Codigos
+      operationId: getCodigos
+      parameters:
+        - name: numeroPagina
+          in: query
+          required: false
+          example: 35
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+        - name: categoria
+          in: query
+          required: false
+          example: TECNOLOGIA
+          schema:
+            type: string
+            minLength: 1
+            maxLength: 20
+      responses:
+        '200':
+          description: Se han encontrado códigos
+          content:
+            application/json:
+              schema:
+                description: Un arreglo de códigos
+                type: array
+                items:
+                  $ref: '#/components/schemas/CodigoDescuentoSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+
+
+
+
+  /codigos/{id_Codigo}:
+
+
+      put:
+        summary: Actualiza un codigo de descuento existente
+        tags:
+          - Codigos
+        parameters:
+          - name: id_Codigo
+            description: El id del codigo
+            in: path
+            schema:
+              type: integer
+              format: int32
+            required: true
+        requestBody:
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CodigoDescuentoSchema'
+        responses:
+          '200':
+            description: Una representación JSON de un código de descuento
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/CodigoDescuentoSchema'
+          '404':
+            $ref: '#/components/responses/NotFound'
+
+
+
+
+
+
+
+
+
+
+
+
+  /miembros:
+    description: Catalogo de los miembros del sistema
+    post:
+      summary: Registra un miembroOfercompas en la comunidad
+      tags:
+        - Miembros
+      requestBody:
+        description: Un miembro Ofercompas
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '201':
+          description: Una representación JSON del miembroOfercompasRegistrado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '400':
+            $ref: '#/components/responses/BadRequest'
+
+  /miembros/{idMiembro}:
+    description: Un miembro indentificado por su id
+    get:
+      summary: Retorna un miembro de acuerdo a su id
+      tags:
+        - Miembros
+      parameters:
+        - name: idMiembro
+          description: Id del miembro
+          example: 4
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      responses:
+        '200':
+          description: Se ha encontrado el miembro solicitado
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+    put:
+      summary: Actualiza un Miembro Ofercompas existente
+      tags:
+        - Miembros
+      parameters:
+        - name: idMiembro
+          description: El id del miembro a modificar
+          example: 7
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '200':
+          description: Una representación JSON del Miembro Ofercompas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+    delete:
+      summary: Cambia el atributo estado de un miembroOfercompas a eliminado
+      tags:
+        - Miembros
+      parameters:
+        - name: idMiembro
+          description: El id del miembro a modificar
+          example: 7
+          in: path
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          required: true
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MiembroOfercompasSchema'
+      responses:
+        '200':
+          description: Una representación JSON del Miembro Ofercompas
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MiembroOfercompasSchema'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '404':
+          $ref: '#/components/responses/NotFound'
+
+
+components:
+  responses:
+    Success:
+      description: Solicitud realizada con exito
+
+    BadRequest:
+      description: El servidor no pudo interpretar la solicitud, sintaxis invalida 400
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Conflict:
+      description: El servidor no pudo registrar o acutalizar el recurso por duplicamiento de campos 409
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Unauthorized:
+      description: El cliente debe autenticarse para obtener la respuesta solicitada 401
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+    Forbidden:
+      description: El cliente no tiene derechos de acceso al contenido, es decir, no está autorizado 403
+      content:
+        aplication/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+    NotFound:
+      description: No se encontró el recurso especificado 404
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+
+
+  schemas:
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+    PublicacionSchema:
+      type: object
+      required:
+        - titulo
+        - descripcion
+        - puntuacion
+        - estadoPublicacion
+        - categoria
+      properties:
+        titulo:
+          type: string
+          description: Titulo de la oferta
+          example: Raspberry pi 3 firmada por Efra
+        descripcion:
+          type: string
+          description: Descripcion de la publicacion
+          example: Una raspberry pi firmada por Efrain Roblox Pro Player
+        puntuacion:
+          type: integer
+          description: Pustuacion de la publicacion
+          minimum: -999
+          maximum: 999
+          example: 12
+        estadoPublicacion:
+          type: string
+          enum:
+            - ACTIVA
+            - TERMINADA
+            - PROHIBIDA
+            - ELIMINADA
+        categoria:
+          type: string
+          enum:
+            - TECNOLOGIA
+            - MODA_MUJER
+            - MODA_HOMBRE
+            - HOGAR
+            - MASCOTAS
+            - VIAJE
+            - ENTRETENIMIENTO
+            - COMIDA_BEBIDA
+        fechaInicio:
+          type: string
+          format: date
+        fechaFin:
+          type: string
+          format: date
+
+    OfertaSchema:
+      allOf:
+        - $ref: '#/components/schemas/PublicacionSchema'
+        - type: object
+          required:
+            - precio
+            - vinculo
+          properties:
+            precio:
+              type: integer
+              description: Precio en pesos del producto incluyendo centavos
+              format: float
+              example: 500.50
+            vinculo:
+              type: string
+              description: Link que lleva al sitio de la oferta
+              example: https://articulo.mercadolibre.com.mx/MLM-756165002-raspberry-pi4-4gb-case-ventilador-sd-32gb-hdmi-pi-4-b-kit
+
+    CodigoDescuentoSchema:
+      allOf:
+        - $ref: '#/components/schemas/PublicacionSchema'
+        - type: object
+          required:
+            - codigo
+          properties:
+            codigo:
+              type: string
+              description: Codigo que se ingresa en la página para obtener un descuento o promocion
+              example: Ofercompas123
+
+    MiembroOfercompasSchema:
+      type: object
+      required:
+        - nickname
+        - email
+        - contrasenia
+        - estadoMiembro
+        - tipoMiembro
+      properties:
+        nickname:
+          type: string
+          description: Nombre identificador unico de cada Miembro
+          example: YiraPvP
+        email:
+          type: string
+          format: email
+          description: Correo electronico del miembro
+          example: rendon.luisgerardo@gmail.com
+        contraenia:
+          type: string
+          description: Contrasenia de acceso del usuario
+          example: YiraTheBest
+        estadoMiembro:
+          type: string
+          description: Posibles estados que toma el Miembro en el sistema
+          enum:
+            - ACTIVO
+            - EXPULSADO
+            - ELIMINADO
+          example: ACTIVO
+        tipoMiembro:
+          type: string
+          description: Los tipos de roles que un Miembro puede cumplir en el sistema
+          enum:
+            - COMUN
+            - MODERADOR
+            - ADMINISTRADOR
+          example: COMUN
+
+    DenunciaSchema:
+      type: object
+      required:
+        - motivo
+        - comentario
+      properties:
+        motivo:
+          type: string
+          description: Motivo por el cuál se denunció una publicación
+          enum:
+            - DROGAS
+            - ARMAS
+            - PORNOGRAFIA
+            - ANIMALES
+            - FRAUDE
+            - SPAM
+            - ALCOHOL
+            - TABACO
+            - OFENSIVO
+            - PIRATERIA
+            - LINKCAIDO
+          example: DROGAS
+        comentario:
+          type: string
+          description: Comentario explicando el porque de la denuncia
+          example: La publicacion ofrece cocaina y marihuana
+
+    ComentarioSchema:
+      type: object
+      required:
+        - contenido
+      properties:
+        contenido:
+          type: string
+          description: Contenido del comentario hecho a la publicación
+          example: Excelente oderta, aprovechen!
+
+    PuntuacionSchema:
+      type: object
+      required:
+        - id_puntuador
+        - id_publicacion
+      properties:
+        id_puntuador:
+          type: integer
+          description: Identificador de quién puntuó
+          example: 7
+        id_publicacion:
+          type: integer
+          description: Identificador de quién puntuó
+          example: 7
