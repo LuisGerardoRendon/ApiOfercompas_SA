@@ -14,7 +14,7 @@ class CodigoDescuento(Publicacion):
     def convertir_a_json(self) -> dict:
         diccionario = {}
         atributos = ["idPublicacion", "titulo", "descripcion", "codigo", "fechaCreacion", "fechaFin", "publicador",
-                     "categoria"]
+                     "categoria", "puntuacion"]
         for key in atributos:
             if key in self.__dict__.keys():
                 diccionario[key] = self.__getattribute__(key)
@@ -67,6 +67,8 @@ class CodigoDescuento(Publicacion):
                 codigo_aux.fechaCreacion = str(codigo_individual["fechaCreacion"])
                 codigo_aux.fechaFin = str(codigo_individual["fechaFin"])
                 codigo_aux.codigo = codigo_individual["codigo"]
+                codigo_aux.publicador = codigo_individual["publicador"]
+                codigo_aux.puntuacion = codigo_individual["puntuacion"]
                 codigo_aux.obtener_puntuacion()
                 resultado.append(codigo_aux)
         return resultado
