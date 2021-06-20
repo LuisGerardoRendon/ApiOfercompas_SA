@@ -13,8 +13,8 @@ class CodigoDescuento(Publicacion):
 
     def convertir_a_json(self) -> dict:
         diccionario = {}
-        atributos = ["idPublicacion", "titulo", "descripcion", "codigo", "fechaCreacion", "fechaFin", "publicador", "puntuacion",
-                     "categoria"]
+        atributos = ["idPublicacion", "titulo", "descripcion", "codigo", "fechaCreacion", "fechaFin", "publicador",
+                     "categoria", "puntuacion"]
         for key in atributos:
             if key in self.__dict__.keys():
                 diccionario[key] = self.__getattribute__(key)

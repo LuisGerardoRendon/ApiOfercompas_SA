@@ -8,7 +8,7 @@ from src.transferencia_archivos.OfercompasArchivos.ttypes import Imagen
 
 
 class ServidorArchivos:
-    host = "127.0.0.1"
+    host = "localhost"
     puerto = 42778
 
     def __init__(self):
