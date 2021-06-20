@@ -82,7 +82,7 @@ def actualizar_archivo(idPublicacion):
     ruta = str(idPublicacion + "-" + archivo.filename)
     resultado = servidor.guardar_archivo(archivo, ruta)
     if resultado == 0:
-        if archivo.content_type == "image/png" or archivo.content_type == "image/jpeg":
+        if archivo.content_type == "image/png" or archivo.content_type == "image/jpeg" or archivo.content_type == None:
             multimedia.actualizar_imagen(ruta, idPublicacion)
             respuesta = Response(status=HTTPStatus.OK)
         else:

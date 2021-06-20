@@ -61,6 +61,7 @@ def registrar_oferta():
                     status=status,
                     mimetype="application/json"
                 )
+                print(respuesta)
             else:
                 respuesta = Response(status=status)
         else:
