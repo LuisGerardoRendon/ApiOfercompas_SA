@@ -118,3 +118,7 @@ def registrar_denuncia(id_publicacion):
         else:
             respuesta = Response(status=resultado)
     return respuesta
+
+@rutas_publicacion.route("/publicaciones/free", methods =["GET"])
+def metodo_default():
+    return Response(status=200)
