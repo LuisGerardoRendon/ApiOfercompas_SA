@@ -14,12 +14,16 @@ rutas_multimedia = Blueprint("rutas_multimedia", __name__)
 @rutas_multimedia.route("/publicaciones/<idPublicacion>/multimedia", methods=["POST"])
 def publicar_archivo(idPublicacion):
     print(request.files)
+    print("ARCHIVO")
     archivo = request.files.getlist("archivo")[0]
+
     respuesta = Response(status=HTTPStatus.BAD_REQUEST)
     multimedia = Multimedia()
     servidor = ServidorArchivos()
     resultado = 0
-    if archivo.content_type == "image/png" or archivo.content_type == "image/jpeg":
+    print("CONTENT")
+    print(archivo.content_type)
+    if archivo.content_type == "image/png" or archivo.content_type == "image/jpeg" or archivo.content_type == None:
         ruta = str(idPublicacion + "-" + archivo.filename)
         resultado = servidor.guardar_archivo(archivo, ruta)
         if resultado == 0:
@@ -78,7 +82,7 @@ def actualizar_archivo(idPublicacion):
     ruta = str(idPublicacion + "-" + archivo.filename)
     resultado = servidor.guardar_archivo(archivo, ruta)
     if resultado == 0:
-        if archivo.content_type == "image/png" or archivo.content_type == "image/jpeg":
+        if archivo.content_type == "image/png" or archivo.content_type == "image/jpeg" or archivo.content_type == None:
             multimedia.actualizar_imagen(ruta, idPublicacion)
             respuesta = Response(status=HTTPStatus.OK)
         else:
